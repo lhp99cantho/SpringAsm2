@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css">
+</head>
+<body>
+<div class="container-fluid p-0">
+    <div th:insert="~{layout :: header}"></div>
+    <div class="row">
+        <div class="col bg-body-tertiary border" style="height: 666px;" th:insert="~{layout :: subHeader}">
+        </div>
+        <!-- Content main -->
+        <div class="col-10">
+            <div class="container-fluid border mt-2 pb-2">
+                <h2 class="h2">Edit profile</h2>
+                <p class="border-bottom pb-2 bg-secondary-subtle mb-0"><span style="padding-left: 6px;">Profile Form Element.</span></p>
+                <div class="container-fluid border pt-3 pb-3">
+                    <form class="needs-validation" novalidate method="POST">
+                        <div class="form-floating mb-3">
+                            <input type="text" class="form-control" id="firstName" name="firstName" placeholder="First name" value="" required th:value="${member.firstName}">
+                            <label for="firstName">First name</label>
+                            <div class="invalid-feedback">
+                                Please fill in this field.
+                            </div>
+                        </div>
+                        <div class="form-floating mb-3">
+                            <input type="text" class="form-control" id="lastName" name="lastName" placeholder="Last name" value="" required th:value="${member.lastName}">
+                            <label for="lastName">Last name</label>
+                            <div class="invalid-feedback">
+                                Please fill in this field.
+                            </div>
+                        </div>
+                        <div class="mb-3 row">
+                            <label for="email" class="col-sm-2 col-form-label">Email</label>
+                            <div class="col-sm-10">
+                                <input type="text" readonly class="form-control-plaintext" id="email" name="email" value="email@example.com" required th:value="${member.email}">
+                            </div>
+                            <div class="invalid-feedback">
+                                Please fill in this field.
+                            </div>
+                        </div>
+                        <div class="form-floating mb-3">
+                            <input type="text" class="form-control" id="phone" name="phone" placeholder="Phone" value="" required th:value="${member.phone}">
+                            <label for="phone">Phone</label>
+                            <div class="invalid-feedback">
+                                Please fill in this field.
+                            </div>
+                        </div>
+                        <div class="form-floating">
+                            <textarea class="form-control" placeholder="Leave a description here" id="description" style="height: 100px" name="description" th:field="${member.description}"></textarea>
+                            <label for="description">Description</label>
+                        </div>
+                        <div class="form-floating">
+                            <input name="memberId" th:value="${member.memberId}" hidden="true">
+                        </div>
+                        <button type="submit" class="btn btn-primary mt-3">Save</button>
+                        <button type="reset" class="btn btn-warning mt-3">Reset</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+<script>(() => {
+    'use strict'
+
+    // Fetch all the forms we want to apply custom Bootstrap validation styles to
+    const forms = document.querySelectorAll('.needs-validation')
+
+    // Loop over them and prevent submission
+    Array.from(forms).forEach(form => {
+        form.addEventListener('submit', event => {
+            if (!form.checkValidity()) {
+                event.preventDefault()
+                event.stopPropagation()
+            }
+            form.classList.add('was-validated')
+            const formsToSubmit = {
+                firstName: forms[0][0].value,
+                lastName: forms[0][1].value,
+                email: forms[0][2].value,
+                phone: forms[0][3].value,
+                description: forms[0][4].value,
+                memberId: parseInt(forms[0][5].value),
+            }
+            event.preventDefault()
+            fetch("/members", {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(formsToSubmit)
+            })
+                .then(res => res.json())
+                .then(data => {
+                    alert(data.message)
+                    location.reload()
+                })
+                .catch(err => alert(err))
+        }, false)
+    })
+})()</script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.min.js" integrity="sha384-Rx+T1VzGupg4BHQYs2gCW9It+akI2MM/mndMCy36UVfodzcJcF0GGLxZIzObiEfa" crossorigin="anonymous"></script>
+</html>

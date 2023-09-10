@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css">
+</head>
+<body>
+<div class="container-fluid p-0">
+  <div th:insert="~{layout :: header}"></div>
+  <div class="row">
+    <div class="col bg-body-tertiary border" style="height: 666px;" th:insert="~{layout :: subHeader}">
+    </div>
+    <!-- Content main -->
+    <div class="col-10">
+      <div class="container-fluid border mt-2 pb-2">
+        <h2 class="h2">Edit Content</h2>
+        <p class="border-bottom pb-2 bg-secondary-subtle mb-0"><span style="padding-left: 6px;">Edit Content Form Element.</span></p>
+        <div class="container-fluid border pt-3 pb-3">
+          <form class="needs-validation" novalidate>
+            <div class="form-floating mb-3">
+              <input type="text" class="form-control" id="title" name="title" placeholder="Title" th:value="${content.title}" required>
+              <label for="title">Title</label>
+              <div class="invalid-feedback">
+                Invalid.
+              </div>
+            </div>
+            <div class="mb-3">
+              <label for="brief" class="form-label">Brief</label>
+              <input class="form-control" id="brief" name="brief" required th:value="${content.brief}"></input>
+              <div class="invalid-feedback">
+                Invalid.
+              </div>
+            </div>
+            <div class="mb-3">
+              <label for="content" class="form-label">Content</label>
+              <textarea class="form-control" id="content" rows="3" name="content" required th:field="${content.content}"></textarea>
+              <div class="invalid-feedback">
+                Invalid.
+              </div>
+            </div>
+            <input type="text" class="form-control" id="contentId" name="contentId" placeholder="" th:value="${content.contentId}" hidden>
+            <button type="submit" class="btn btn-primary mt-3">Update content</button>
+            <button type="reset" class="btn btn-warning mt-3">Reset</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</body>
+<script>(() => {
+  'use strict'
+
+  // Fetch all the forms we want to apply custom Bootstrap validation styles to
+  const forms = document.querySelectorAll('.needs-validation')
+
+  // Loop over them and prevent submission
+  Array.from(forms).forEach(form => {
+    form.addEventListener('submit', event => {
+      if (!form.checkValidity()) {
+        event.preventDefault()
+        event.stopPropagation()
+      }
+      form.classList.add('was-validated')
+      const formsToSubmit = {
+        title: forms[0][0].value,
+        brief: forms[0][1].value,
+        content: forms[0][2].value,
+        contentId: forms[0][3].value,
+      }
+      event.preventDefault()
+      fetch("/content", {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formsToSubmit)
+      })
+              .then(res => res.json())
+              .then(data => {
+                alert(data.message)
+                location.reload()
+              })
+              .catch(err => alert(err))
+    }, false)
+  })
+})()</script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.min.js" integrity="sha384-Rx+T1VzGupg4BHQYs2gCW9It+akI2MM/mndMCy36UVfodzcJcF0GGLxZIzObiEfa" crossorigin="anonymous"></script>
+</html>

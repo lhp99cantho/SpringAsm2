@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css">
+</head>
+<body>
+<div class="container-fluid p-0">
+    <div th:insert="~{layout :: header}"></div>
+    <div class="row">
+        <div class="col bg-body-tertiary border" style="height: 666px;" th:insert="~{layout :: subHeader}">
+        </div>
+        <!-- Content main -->
+        <div class="col-10">
+            <div class="container-fluid border mt-2 pb-2">
+                <h2 class="h2">View Content</h2>
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col-6">
+                            <form class="input-group mb-3" method="GET" action="/content/view">
+                                <button class="btn btn-outline-secondary" type="submit" id="button-addon1">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
+                                        <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"/>
+                                    </svg>
+                                </button>
+                                <input type="text" class="form-control" placeholder="Search content by title ..." aria-label="Title for searching..." aria-describedby="button-addon1" name="search">
+                            </form>
+                        </div>
+                        <div class="col-2">
+
+                        </div>
+                    </div>
+                </div>
+                <div class="container-fluid border pt-3 table-responsive">
+                    <table class="table table-striped table-bordered">
+                        <caption>List of content.</caption>
+                        <thead>
+                        <tr>
+                            <th scope="col">Id</th>
+                            <th scope="col">Title</th>
+                            <th scope="col">Brief</th>
+                            <th scope="col">Content</th>
+                            <th scope="col">Created time</th>
+                            <th scope="col">Action</th>
+                        </tr>
+                        </thead>
+                        <tbody class="table-group-divider">
+                        <tr th:each="contents : ${list}">
+                            <th scope="row" th:text="${contents.contentId}"></th>
+                            <td th:text="${contents.title}"></td>
+                            <td th:text="${contents.brief}"></td>
+                            <td th:text="${contents.content}"></td>
+                            <td th:text="${contents.createdDate}"></td>
+                            <td>
+                                <a th:href="@{'/content/edit/' + ${contents.contentId}}" class="rounded-pill bg-primary bg-gradient text-white px-3 py-1 text-decoration-none" th:data-id="${contents.contentId}">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-file-earmark-diff-fill" viewBox="0 0 16 16">
+                                        <path d="M9.293 0H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V4.707A1 1 0 0 0 13.707 4L10 .293A1 1 0 0 0 9.293 0zM9.5 3.5v-2l3 3h-2a1 1 0 0 1-1-1zM8 6a.5.5 0 0 1 .5.5V8H10a.5.5 0 0 1 0 1H8.5v1.5a.5.5 0 0 1-1 0V9H6a.5.5 0 0 1 0-1h1.5V6.5A.5.5 0 0 1 8 6zm-2.5 6.5A.5.5 0 0 1 6 12h4a.5.5 0 0 1 0 1H6a.5.5 0 0 1-.5-.5z"/>
+                                    </svg>
+                                    Edit</a>
+                                <a class="rounded-pill bg-danger bg-gradient text-white px-2 py-1 text-decoration-none" id="delete-btn" th:data-id="${contents.contentId}" style="cursor: pointer;">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash3-fill" viewBox="0 0 16 16">
+                                        <path d="M11 1.5v1h3.5a.5.5 0 0 1 0 1h-.538l-.853 10.66A2 2 0 0 1 11.115 16h-6.23a2 2 0 0 1-1.994-1.84L2.038 3.5H1.5a.5.5 0 0 1 0-1H5v-1A1.5 1.5 0 0 1 6.5 0h3A1.5 1.5 0 0 1 11 1.5Zm-5 0v1h4v-1a.5.5 0 0 0-.5-.5h-3a.5.5 0 0 0-.5.5ZM4.5 5.029l.5 8.5a.5.5 0 1 0 .998-.06l-.5-8.5a.5.5 0 1 0-.998.06Zm6.53-.528a.5.5 0 0 0-.528.47l-.5 8.5a.5.5 0 0 0 .998.058l.5-8.5a.5.5 0 0 0-.47-.528ZM8 4.5a.5.5 0 0 0-.5.5v8.5a.5.5 0 0 0 1 0V5a.5.5 0 0 0-.5-.5Z"/>
+                                    </svg>
+                                    Delete</a>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+<script>
+    const deleteBtn = document.querySelectorAll("#delete-btn");
+    deleteBtn.forEach((e) => {
+        e.onclick = (b) => {
+            const id = e.getAttribute("data-id");
+            console.log("Clicked " + id)
+            fetch("/content", {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: id.toString()
+            })
+                .then(response => response.json())
+                .then(data => {
+                    location.reload()
+                })
+                .catch(err => alert(err))
+        }
+    })
+</script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.min.js" integrity="sha384-Rx+T1VzGupg4BHQYs2gCW9It+akI2MM/mndMCy36UVfodzcJcF0GGLxZIzObiEfa" crossorigin="anonymous"></script>
+</html>
